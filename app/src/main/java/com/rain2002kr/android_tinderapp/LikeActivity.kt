@@ -99,7 +99,7 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
     private fun saveUserName(name: String) {
 
         val userId = getCurrentUserID()
-        val currentUserDB = userDB
+        val currentUserDB = userDB.child(userId)
         val user = mutableMapOf<String, Any>()
         user["userId"] = userId
         user["name"] = name
