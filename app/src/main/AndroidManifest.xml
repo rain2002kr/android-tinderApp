@@ -45,6 +45,9 @@
         <activity android:name=".LikeActivity">
 
         </activity>
+        <activity android:name=".MatchedUserActivity">
+
+        </activity>
 
     </application>
 
