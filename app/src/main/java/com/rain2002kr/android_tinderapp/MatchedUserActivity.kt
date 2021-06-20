@@ -10,6 +10,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.rain2002kr.android_tinderapp.DBKey.Companion.LIKED_BY
+import com.rain2002kr.android_tinderapp.DBKey.Companion.MATCH
+import com.rain2002kr.android_tinderapp.DBKey.Companion.NAME
+import com.rain2002kr.android_tinderapp.DBKey.Companion.USERS
 
 class MatchedUserActivity :AppCompatActivity(){
     private var auth = Firebase.auth
@@ -21,7 +25,7 @@ class MatchedUserActivity :AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
 
-        userDB = Firebase.database.reference.child("Users")
+        userDB = Firebase.database.reference.child(USERS)
 
         initMatchedUserRecyclerView()
         getMatchUsers()
@@ -29,7 +33,7 @@ class MatchedUserActivity :AppCompatActivity(){
     }
 
     private fun getMatchUsers() {
-        val matchedDB = userDB.child(getCurrentUserID()).child("likeBy").child("match")
+        val matchedDB = userDB.child(getCurrentUserID()).child(LIKED_BY).child(MATCH)
 
         matchedDB.addChildEventListener(object:ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -50,7 +54,7 @@ class MatchedUserActivity :AppCompatActivity(){
     private fun getUserByKey(userId : String){
         userDB.child(userId).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                cardItem.add(CardItem(userId, snapshot.child("name").value.toString()))
+                cardItem.add(CardItem(userId, snapshot.child(NAME).value.toString()))
                 adapter.submitList(cardItem)
             }
 
@@ -68,7 +72,7 @@ class MatchedUserActivity :AppCompatActivity(){
 
     private fun getCurrentUserID(): String {
         if (auth.currentUser == null) {
-            Toast.makeText(this, "로그인이 되어있지 않습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.notLogin), Toast.LENGTH_SHORT).show()
             finish()
         }
         return auth.currentUser?.uid.orEmpty()
